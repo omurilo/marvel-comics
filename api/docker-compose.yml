@@ -1,0 +1,39 @@
+version: "3"
+
+networks:
+  marvel_comics:
+    driver: bridge
+
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: "marvel_comics_pg"
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      - ALLOW_IP_RANGE=0.0.0.0/0
+      - POSTGRESQL_USERNAME=${DB_USER}
+      - POSTGRESQL_PASSWORD=${DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${DB_NAME}
+    volumes:
+      - ./docker/data/pg:/bitnami/postgresql
+    networks:
+      - marvel_comics
+
+  app:
+    container_name: "marvel_comics_app"
+    build: .
+    environment:
+      - DB_URL=postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    volumes:
+      - .:/app
+    ports:
+      - ${PORT}:${PORT}
+    command: ${DOCKER_APP_COMMAND}
+    networks:
+      - marvel_comics
