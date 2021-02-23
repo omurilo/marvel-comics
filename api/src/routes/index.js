@@ -17,8 +17,8 @@ export default class Routes {
     return context;
   }
 
-  async _mapRoutes({ db, Route, schema }) {
-    let context;
+  async _mapRoutes({ db, Route, schema, routeParams = [] }) {
+    let context = [];
 
     if (db && schema) {
       const connection = await db.connect();
@@ -35,7 +35,7 @@ export default class Routes {
       }
     }
 
-    const instance = new Route(...context);
+    const instance = new Route(...context, ...routeParams);
     const methods = Route.methods();
 
     return methods.map((method) => instance[method]());
@@ -46,6 +46,7 @@ export default class Routes {
       db: PostgreSQL,
       Route: AuthRoutes,
       schema: UserSchema,
+      routeParams: [process.env.JWT_SECRET],
     });
     const utilRoutes = await this._mapRoutes({ Route: UtilRoutes });
 
