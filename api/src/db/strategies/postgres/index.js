@@ -34,8 +34,14 @@ export default class PostgreSQL extends ICrud {
     return dataValues;
   }
 
-  async index(query) {
-    return this._schema.findAll({ where: query, raw: true });
+  async index(query, skip, limit) {
+    const { count, rows } = await this._schema.findAndCountAll({
+      where: query,
+      raw: true,
+      offset: skip,
+      limit,
+    });
+    return { count, rows };
   }
 
   update(id, item, upsert = false) {
@@ -64,6 +70,7 @@ export default class PostgreSQL extends ICrud {
       define: {
         freezeTableName: false,
         timestamps: false,
+        underscoredAll: true,
       },
     });
     return connection;

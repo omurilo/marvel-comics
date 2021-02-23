@@ -42,7 +42,9 @@ export default class AuthRoute extends BaseRoute {
       handler: async (request) => {
         const { username, password } = request.payload;
 
-        const [result] = await this.db.index({
+        const {
+          rows: [result],
+        } = await this.db.index({
           username: username.toLowerCase(),
         });
 
