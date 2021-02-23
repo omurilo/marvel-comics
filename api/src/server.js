@@ -5,6 +5,7 @@ import Inert from "@hapi/inert";
 import Vision from "@hapi/vision";
 import HapiJwt from "hapi-auth-jwt2";
 
+import Routes from "./routes";
 import SentryConfig from "../config/sentry";
 import SwaggerConfig from "../config/swagger";
 
@@ -70,6 +71,12 @@ class App {
     });
 
     this.app.auth.default("jwt");
+  }
+
+  async routes() {
+    const routes = new Routes();
+    const routesArray = await routes.generateRoutes();
+    this.app.route(routesArray);
   }
 
   async run() {
