@@ -48,7 +48,6 @@
     "uuid": "^3.4.0"
   },
   "scripts": {
-    "postinstall": "cross-env NODE_ENV=production npm run coverage:prod",
     "test": "cross-env NODE_ENV=development jest --detectOpenHandles",
     "coverage": "cross-env NODE_ENV=development jest --detectOpenHandles --coverage",
     "test:prod": "cross-env NODE_ENV=production npm run test",
@@ -58,6 +57,6 @@
     "build": "babel src -d dist",
     "db:migrate": "sequelize db:migrate",
     "db:seed": "sequelize db:seed:all",
-    "docker:dev": "docker-compose --env-file .env.development up -d"
+    "docker:dev": "docker-compose --env-file config/.env.development up -d"
   }
 }
